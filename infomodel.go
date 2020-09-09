@@ -75,11 +75,11 @@ func (i *StructureGroupProvider) GetInfomodelByIdentifier(identifier string, str
 			}
 			presets = append(presets, val)
 		}
-		manda, ok := row.Values[3].(bool)
+		manda, ok := row.Values[3].(string)
 		if !ok {
 			return nil, TypeCastErr
 		}
-		multi, ok := row.Values[4].(bool)
+		multi, ok := row.Values[4].(string)
 		if !ok {
 			return nil, TypeCastErr
 		}
@@ -87,8 +87,8 @@ func (i *StructureGroupProvider) GetInfomodelByIdentifier(identifier string, str
 			Name:         name,
 			DataType:     dataType,
 			PresetValues: presets,
-			Mandatory:    manda,
-			Multivalued:  multi,
+			Mandatory:    manda == "true",
+			Multivalued:  multi == "true",
 		}
 	}
 	return &StructureGroup{
