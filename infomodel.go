@@ -12,7 +12,9 @@ const (
 
 var (
 	//fields for requests
-	InfomodelFields = []string{"StructureGroupAttributeLang.Name(Russian)", "StructureGroupAttribute.Datatype", "StructureGroupAttributeLang.DomainValue(Russian)"}
+	InfomodelFields = []string{"StructureGroupAttributeLang.Name(Russian)", "StructureGroupAttribute.Datatype",
+		"StructureGroupAttributeLang.DomainValue(Russian)", "StructureGroupAttribute.IsMandatory",
+		"StructureGroupAttribute.MultiValue"}
 
 	//errors
 	TypeCastErr = fmt.Errorf("cant cast value to correct type")
@@ -28,6 +30,8 @@ type Feature struct {
 	Name         string
 	DataType     string
 	PresetValues []string
+	Mandatory    bool
+	Multivalued  bool
 }
 
 type StructureGroupProvider struct {
@@ -71,10 +75,20 @@ func (i *StructureGroupProvider) GetInfomodelByIdentifier(identifier string, str
 			}
 			presets = append(presets, val)
 		}
+		manda, ok := row.Values[3].(bool)
+		if !ok {
+			return nil, TypeCastErr
+		}
+		multi, ok := row.Values[4].(bool)
+		if !ok {
+			return nil, TypeCastErr
+		}
 		fs[name] = Feature{
 			Name:         name,
 			DataType:     dataType,
 			PresetValues: presets,
+			Mandatory:    manda,
+			Multivalued:  multi,
 		}
 	}
 	return &StructureGroup{
