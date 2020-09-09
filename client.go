@@ -52,7 +52,7 @@ func (c *Client) StructureGroupProvider() *StructureGroupProvider {
 }
 
 func (c *Client) baseUrl() string {
-	return c.Config.Host + restUrlPath
+	return "http://" + c.Config.Host + restUrlPath
 }
 
 func (c *Client) post(url string, data []byte) (*http.Response, error) {
