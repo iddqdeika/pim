@@ -71,7 +71,9 @@ func (c *Client) get(url string) (*PimReadResponse, error) {
 	req.SetBasicAuth(c.Config.Login, c.Config.Password)
 
 	res, err := c.doWithRetries(req, 3)
-
+	if err != nil {
+		return nil, err
+	}
 	data, err := ioutil.ReadAll(res.Body)
 	if err != nil {
 		return nil, err
