@@ -194,28 +194,3 @@ type PimUpdateCounters struct {
 	ObjectsWithErrors   int `json:"objects_with_errors"`
 	ObjectsWithWarnings int `json:"objects_with_warnings"`
 }
-
-//{
-//    "counters": {
-//        "errors": 0,
-//        "warnings": 0,
-//        "createdObjects": 0,
-//        "updatedObjects": 1,
-//        "objectsWithErrors": 0,
-//        "objectsWithWarnings": 0
-//    },
-//    "entries": [],
-//    "objects": [
-//        {
-//            "row": 0,
-//            "object": {
-//                "id": "1054540@1",
-//                "label": "100023210190",
-//                "entityId": 1000
-//            },
-//            "status": [
-//                "UPDATED"
-//            ]
-//        }
-//    ]
-//}

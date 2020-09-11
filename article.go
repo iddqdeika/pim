@@ -104,24 +104,6 @@ func newArticleUpdate(columns []string, articles []ArticleUpdate) (*PimUpdateBod
 	return ub, nil
 }
 
-//{
-//  "columns": [
-//    {
-//      "identifier": "Article.AclProxy"
-//    }
-//  ],
-//  "rows": [
-//    {
-//      "object": {
-//        "id": "1054540@1"
-//      },
-//      "values": [
-//        "101"
-//      ]
-//    }
-//  ]
-//}
-
 func (p *ArticleProvider) NewUpdateFromNo(articleNo string) ArticleUpdate {
 	return ArticleUpdate{
 		ArticleNo: articleNo,
