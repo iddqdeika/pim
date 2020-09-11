@@ -36,6 +36,10 @@ func NewClient(config Config) (*Client, error) {
 	sgp := &StructureGroupProvider{
 		c: c,
 	}
+	ap := &ArticleProvider{
+		c: c,
+	}
+	c.ap = ap
 	c.sgp = sgp
 	return c, nil
 }
@@ -45,10 +49,15 @@ type Client struct {
 	client http.Client
 
 	sgp *StructureGroupProvider
+	ap  *ArticleProvider
 }
 
 func (c *Client) StructureGroupProvider() *StructureGroupProvider {
 	return c.sgp
+}
+
+func (c *Client) ArticleProvider() *ArticleProvider {
+	return c.ap
 }
 
 func (c *Client) baseUrl() string {
