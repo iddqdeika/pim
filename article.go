@@ -1,6 +1,8 @@
 package pim
 
-import ()
+import (
+	"fmt"
+)
 
 const (
 	ArticlePath           = "Article"
@@ -55,8 +57,84 @@ type ArticleStructureMap struct {
 	EntityID int    `json:"entityId"`
 }
 
+func (p *ArticleProvider) Update(columns []string, articles ...ArticleUpdate) error {
+	url := p.c.baseUrl() + ArticlePath
+	ub, err := newArticleUpdate(columns, articles)
+	if err != nil {
+		return nil
+	}
+	res, err := p.c.update(url, ub)
+	if err != nil {
+		return err
+	}
+	if res.Counters.Errors != 0 {
+		return fmt.Errorf("update complete with %v errors", res.Counters.Errors)
+	}
+	return nil
+}
+
+func newArticleUpdate(columns []string, articles []ArticleUpdate) (*PimUpdateBody, error) {
+	ub := &PimUpdateBody{}
+	cm := make(map[string]int)
+	for i, column := range columns {
+		cm[column] = i
+		ub.Columns = append(ub.Columns, PimUpdateColumn{Identifier: column})
+	}
+	for _, article := range articles {
+		row := PimUpdateRow{
+			Object: PimUpdateObject{
+				ID: "'" + article.ArticleNo + "'@1",
+			},
+			Values: make([]string, len(cm)),
+		}
+		if len(article.Fields) != len(cm) {
+			return nil, fmt.Errorf("article %v contains %v fields, but there must be %v",
+				article.ArticleNo, len(article.Fields), len(cm))
+		}
+		for field, val := range article.Fields {
+			i, ok := cm[field]
+			if !ok {
+				return nil, fmt.Errorf("article %v contains field %v that isn't declared in fields slice",
+					article.ArticleNo, field)
+			}
+			row.Values[i] = val
+		}
+		ub.Rows = append(ub.Rows, row)
+	}
+	return ub, nil
+}
+
 //{
-//                        "id": "120579@9001",
-//                        "label": "170101010101",
-//                        "entityId": 3000
-//                    }
+//  "columns": [
+//    {
+//      "identifier": "Article.AclProxy"
+//    }
+//  ],
+//  "rows": [
+//    {
+//      "object": {
+//        "id": "1054540@1"
+//      },
+//      "values": [
+//        "101"
+//      ]
+//    }
+//  ]
+//}
+
+func (p *ArticleProvider) NewUpdateFromNo(articleNo string) ArticleUpdate {
+	return ArticleUpdate{
+		ArticleNo: articleNo,
+		Fields:    make(map[string]string),
+	}
+}
+
+type ArticleUpdate struct {
+	ArticleNo string
+	Fields    map[string]string
+}
+
+func (a ArticleUpdate) With(field string, value string) ArticleUpdate {
+	a.Fields[field] = value
+	return a
+}
