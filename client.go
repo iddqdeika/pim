@@ -14,6 +14,11 @@ const (
 	retryTimeout = time.Second
 )
 
+var (
+	//errors
+	TypeCastErr = fmt.Errorf("cant cast value to correct type")
+)
+
 type Config struct {
 	Host          string
 	Login         string

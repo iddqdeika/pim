@@ -2,6 +2,7 @@ package pim
 
 import (
 	"fmt"
+	"strings"
 )
 
 const (
@@ -9,7 +10,9 @@ const (
 	ArticleAttributesPath = "Article/ArticleAttribute"
 )
 
-var ()
+var (
+	ArticleAttributesFields = []string{"ArticleAttributeLang.Name", "ArticleAttributeValue.Value(Russian,DEFAULT)"}
+)
 
 type ArticleProvider struct {
 	c *Client
@@ -55,6 +58,41 @@ type ArticleStructureMap struct {
 	ID       string `json:"id"`
 	Label    string `json:"label"`
 	EntityID int    `json:"entityId"`
+}
+
+func (p *ArticleProvider) GetAttributes(articleIdentifier string) ([]ArticleAttribute, error) {
+	url := p.c.baseUrl() + ArticleAttributesPath + "/byItems?" +
+		"items=" + "'" + articleIdentifier + "'@1" +
+		"&fields=" + strings.Join(ArticleAttributesFields, ",") +
+		"&pageSize=-1"
+	res, err := p.c.get(url)
+	if err != nil {
+		return nil, err
+	}
+	result := make([]ArticleAttribute, 0)
+	for _, row := range res.Rows {
+		if len(row.Values) != len(ArticleAttributesFields) {
+			return nil, fmt.Errorf("cant parse attributes, wrong num of values in a row")
+		}
+		name, ok := row.Values[0].(string)
+		if !ok {
+			return nil, TypeCastErr
+		}
+		value, ok := row.Values[1].(string)
+		if !ok {
+			return nil, TypeCastErr
+		}
+		result = append(result, ArticleAttribute{
+			Name:  name,
+			Value: value,
+		})
+	}
+	return result, nil
+}
+
+type ArticleAttribute struct {
+	Name  string
+	Value string
 }
 
 func (p *ArticleProvider) Update(columns []string, articles ...ArticleUpdate) error {

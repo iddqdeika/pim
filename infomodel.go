@@ -15,9 +15,6 @@ var (
 	InfomodelFields = []string{"StructureGroupAttributeLang.Name(Russian)", "StructureGroupAttribute.Datatype",
 		"StructureGroupAttributeLang.DomainValue(Russian)", "StructureGroupAttribute.IsMandatory",
 		"StructureGroupAttribute.MultiValue"}
-
-	//errors
-	TypeCastErr = fmt.Errorf("cant cast value to correct type")
 )
 
 type StructureGroup struct {
