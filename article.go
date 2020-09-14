@@ -12,6 +12,7 @@ const (
 
 var (
 	ArticleAttributesFields = []string{"ArticleAttributeLang.Name", "ArticleAttributeValue.Value(Russian,DEFAULT)"}
+	bracketsReplacer        = strings.NewReplacer("[", "", "]", "")
 )
 
 type ArticleProvider struct {
@@ -21,7 +22,7 @@ type ArticleProvider struct {
 func (p *ArticleProvider) GetStructureMaps(articleIdentifier string, structureIdentifier string) ([]string, error) {
 	url := p.c.baseUrl() + ArticlePath + "/byItems?" +
 		"items=" + "'" + articleIdentifier + "'@1" +
-		"&fields=ArticleStructureMap.StructureGroup(" + structureIdentifier + ")" +
+		"&fields=ArticleStructureMap.StructureGroup(" + structureIdentifier + ")->StructureGroup.Identifier" +
 		"&pageSize=-1"
 	res, err := p.c.get(url)
 	if err != nil {
@@ -29,27 +30,15 @@ func (p *ArticleProvider) GetStructureMaps(articleIdentifier string, structureId
 	}
 	result := make([]string, 0)
 	for _, row := range res.Rows {
-		for _, v := range row.Values {
-			maps, ok := v.([]interface{})
-			if !ok {
-				continue
-			}
-			for _, m := range maps {
-				mo, ok := m.(map[string]interface{})
-				if !ok {
-					continue
-				}
-				li, ok := mo["label"]
-				if !ok {
-					continue
-				}
-				label, ok := li.(string)
-				if !ok {
-					continue
-				}
-				result = append(result, label)
-			}
+		if len(row.Values) != 1 {
+			return nil, fmt.Errorf("incorrect value count returned from pim")
 		}
+		maps, ok := row.Values[0].(string)
+		if !ok {
+			return nil, TypeCastErr
+		}
+		maps = bracketsReplacer.Replace(maps)
+		result = append(result, maps)
 	}
 	return result, nil
 }

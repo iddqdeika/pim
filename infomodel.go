@@ -19,6 +19,7 @@ var (
 
 type StructureGroup struct {
 	Identifier  string
+	ObjectID    string
 	StructureID int
 	Features    map[string]Feature
 }
