@@ -78,6 +78,7 @@ func (c *Client) post(url string, data []byte) (*http.Response, error) {
 }
 
 func (c *Client) get(url string) (*PimReadResponse, error) {
+	url += "&cacheId=no-cache"
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return nil, err
