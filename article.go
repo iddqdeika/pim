@@ -20,7 +20,7 @@ type ArticleProvider struct {
 }
 
 func (p *ArticleProvider) GetStructureMaps(articleIdentifier string, structureIdentifier string) ([]string, error) {
-	url := p.c.baseUrl() + ArticlePath + "/byItems?" +
+	url := p.c.baseListUrl() + ArticlePath + "/byItems?" +
 		"items=" + "'" + articleIdentifier + "'@1" +
 		"&fields=ArticleStructureMap.StructureGroup(" + structureIdentifier + ")->StructureGroup.Identifier" +
 		"&pageSize=-1"
@@ -50,7 +50,7 @@ type ArticleStructureMap struct {
 }
 
 func (p *ArticleProvider) GetAttributes(articleIdentifier string) ([]ArticleAttribute, error) {
-	url := p.c.baseUrl() + ArticleAttributesPath + "/byItems?" +
+	url := p.c.baseListUrl() + ArticleAttributesPath + "/byItems?" +
 		"items=" + "'" + articleIdentifier + "'@1" +
 		"&fields=" + strings.Join(ArticleAttributesFields, ",") +
 		"&pageSize=-1"
@@ -85,7 +85,7 @@ type ArticleAttribute struct {
 }
 
 func (p *ArticleProvider) Update(columns []string, articles ...ArticleUpdate) error {
-	url := p.c.baseUrl() + ArticlePath
+	url := p.c.baseListUrl() + ArticlePath
 	ub, err := newArticleUpdate(columns, articles)
 	if err != nil {
 		return nil

@@ -37,7 +37,7 @@ type StructureGroupProvider struct {
 }
 
 func (i *StructureGroupProvider) GetInfomodelByIdentifier(identifier string, structureID int) (*StructureGroup, error) {
-	url := i.c.baseUrl() + InfomodelPath + "/byItems?" +
+	url := i.c.baseListUrl() + InfomodelPath + "/byItems?" +
 		"items=" + "'" + identifier + "'@" + strconv.Itoa(structureID) +
 		"&fields=" + strings.Join(InfomodelFields, ",") +
 		"&pageSize=-1"

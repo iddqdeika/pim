@@ -10,8 +10,9 @@ import (
 )
 
 const (
-	restUrlPath  = "/rest/V1.0/list/"
-	retryTimeout = time.Second
+	restUrlPath     = "/rest/V1.0/"
+	restUrlListPath = "/rest/V1.0/list/"
+	retryTimeout    = time.Second
 )
 
 var (
@@ -44,36 +45,56 @@ func NewClient(config Config) (*Client, error) {
 	ap := &ArticleProvider{
 		c: c,
 	}
+	dqp := &DataQualityProvider{
+		c: c,
+	}
 	c.ap = ap
 	c.sgp = sgp
+	c.dqp = dqp
 	return c, nil
 }
 
+// PIM API client
+// provides concrete functional abstractions
 type Client struct {
 	Config Config
 	client http.Client
 
 	sgp *StructureGroupProvider
 	ap  *ArticleProvider
+	dqp *DataQualityProvider
 }
 
+// позволяет работать со структурными группами
 func (c *Client) StructureGroupProvider() *StructureGroupProvider {
 	return c.sgp
 }
 
+// позволяет работать с позициями
 func (c *Client) ArticleProvider() *ArticleProvider {
 	return c.ap
+}
+
+// позволяет работать с правилами качества данных
+func (c *Client) DataQualityProvider() *DataQualityProvider {
+	return c.dqp
 }
 
 func (c *Client) baseUrl() string {
 	return "http://" + c.Config.Host + restUrlPath
 }
 
-func (c *Client) post(url string, data []byte) (*http.Response, error) {
+func (c *Client) baseListUrl() string {
+	return "http://" + c.Config.Host + restUrlListPath
+}
+
+func (c *Client) postJson(url string, data []byte) (*http.Response, error) {
 	req, err := http.NewRequest("POST", url, bytes.NewBuffer(data))
 	if err != nil {
 		return nil, err
 	}
+	req.Header.Set("Content-Type", "application/json")
+	req.SetBasicAuth(c.Config.Login, c.Config.Password)
 	return c.client.Do(req)
 }
 
