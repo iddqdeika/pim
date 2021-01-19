@@ -100,6 +100,41 @@ func (p *ArticleProvider) Update(columns []string, articles ...ArticleUpdate) er
 	return nil
 }
 
+func (p *ArticleProvider) NewAttrituteValueUpdateOrder(update ArticleAttributeValueUpdate) (*PimUpdateOrder, error) {
+	b, err := newArticleAttributeValueUpdate(update)
+	if err != nil {
+		return nil, err
+	}
+	return &PimUpdateOrder{
+		UrlPath:    ArticleAttributesPath,
+		UpdateBody: b,
+	}, nil
+}
+
+func newArticleAttributeValueUpdate(update ArticleAttributeValueUpdate) (*PimUpdateBody, error) {
+	//тело апдейта
+	ub := &PimUpdateBody{
+		Columns: []PimUpdateColumn{{
+			Identifier: "ArticleAttributeValue.Value",
+		}},
+	}
+	//перебираем заданные атрибуты
+	for name, value := range update.Attributes {
+		//добавляем строчку с объектом значения атрибута
+		ub.Rows = append(ub.Rows, PimUpdateRow{
+			Object: PimUpdateObject{
+				ID: "'" + update.ArticleNo + "'@1"},
+			Qualification: map[string]string{
+				"name":       name,
+				"language":   update.Language,
+				"identifier": update.Identifier,
+			},
+			Values: []string{value},
+		})
+	}
+	return ub, nil
+}
+
 func newArticleUpdate(columns []string, articles []ArticleUpdate) (*PimUpdateBody, error) {
 	ub := &PimUpdateBody{}
 	cm := make(map[string]int)
@@ -138,6 +173,17 @@ func (p *ArticleProvider) NewUpdateFromNo(articleNo string) ArticleUpdate {
 	}
 }
 
+// создать новый объект для обновления значений атрибутов позиции.
+// язык и идентификатор значения указывается для всех атрибутов сразу.
+func (p *ArticleProvider) NewAttributeValueUpdate(articleNo, language, identifier string) ArticleAttributeValueUpdate {
+	return ArticleAttributeValueUpdate{
+		ArticleNo:  articleNo,
+		Language:   language,
+		Identifier: identifier,
+		Attributes: make(map[string]string),
+	}
+}
+
 type ArticleUpdate struct {
 	ArticleNo string
 	Fields    map[string]string
@@ -146,4 +192,16 @@ type ArticleUpdate struct {
 func (a ArticleUpdate) With(field string, value string) ArticleUpdate {
 	a.Fields[field] = value
 	return a
+}
+
+type ArticleAttributeValueUpdate struct {
+	ArticleNo  string
+	Language   string
+	Identifier string
+	Attributes map[string]string
+}
+
+func (u ArticleAttributeValueUpdate) With(attributeName string, value string) ArticleAttributeValueUpdate {
+	u.Attributes[attributeName] = value
+	return u
 }

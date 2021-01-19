@@ -175,6 +175,21 @@ func (c *Client) try(req *http.Request) (*http.Response, error) {
 	return res, nil
 }
 
+func (c *Client) UpdateFromOrder(dto *PimUpdateOrder) error {
+	if err := dto.Validate(); err != nil {
+		return fmt.Errorf("invalid pim update order given: %v", err)
+	}
+	url := c.baseListUrl() + dto.UrlPath
+	res, err := c.update(url, dto.UpdateBody)
+	if err != nil {
+		return err
+	}
+	if res.Counters.Errors != 0 {
+		return fmt.Errorf("update complete with %v errors", res.Counters.Errors)
+	}
+	return nil
+}
+
 type PimReadResponse struct {
 	Rows []PimReadRow `json:"rows"`
 }
@@ -189,6 +204,28 @@ type PimReadObject struct {
 	EntityID int    `json:"entityId"`
 }
 
+type PimUpdateOrder struct {
+	UrlPath    string         `json:"url_path"`
+	UpdateBody *PimUpdateBody `json:"update_body"`
+}
+
+// проверяет консистентность самое себя
+func (o PimUpdateOrder) Validate() error {
+	if len(o.UrlPath) == 0 {
+		return fmt.Errorf("empty url_path")
+	}
+	if o.UpdateBody == nil {
+		return fmt.Errorf("empty(nil) update body")
+	}
+	if len(o.UpdateBody.Columns) == 0 {
+		return fmt.Errorf("no columns in update body")
+	}
+	if len(o.UpdateBody.Rows) == 0 {
+		return fmt.Errorf("no rows in update body")
+	}
+	return nil
+}
+
 type PimUpdateBody struct {
 	Columns []PimUpdateColumn `json:"columns"`
 	Rows    []PimUpdateRow    `json:"rows"`
@@ -199,8 +236,9 @@ type PimUpdateColumn struct {
 }
 
 type PimUpdateRow struct {
-	Object PimUpdateObject `json:"object"`
-	Values []string        `json:"values"`
+	Object        PimUpdateObject   `json:"object"`
+	Qualification map[string]string `json:"qualification"`
+	Values        []string          `json:"values"`
 }
 
 type PimUpdateObject struct {
