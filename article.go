@@ -84,6 +84,9 @@ type ArticleAttribute struct {
 	Value string
 }
 
+// столбцы должны содержать идентификаторы полей, указанные в articles.
+// если у позиций нет какого-либо из столбцов - вернется соответствующая ошибка
+// если у позиций есть поле, которое не перечислено в столбцах - вернется соответствующая ошибка
 func (p *ArticleProvider) Update(columns []string, articles ...ArticleUpdate) error {
 	url := p.c.baseListUrl() + ArticlePath
 	ub, err := newArticleUpdate(columns, articles)
@@ -98,6 +101,17 @@ func (p *ArticleProvider) Update(columns []string, articles ...ArticleUpdate) er
 		return fmt.Errorf("update complete with %v errors", res.Counters.Errors)
 	}
 	return nil
+}
+
+func (p *ArticleProvider) NewUpdateOrder(columns []string, articles ...ArticleUpdate) (*PimUpdateOrder, error) {
+	ub, err := newArticleUpdate(columns, articles)
+	if err != nil {
+		return nil, err
+	}
+	return &PimUpdateOrder{
+		UrlPath:    ArticlePath,
+		UpdateBody: ub,
+	}, nil
 }
 
 func (p *ArticleProvider) NewAttrituteValueUpdateOrder(update ArticleAttributeValueUpdate) (*PimUpdateOrder, error) {
