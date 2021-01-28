@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	url2 "net/url"
 	"time"
 )
 
@@ -39,16 +40,19 @@ func NewClient(config Config) (*Client, error) {
 		Config: config,
 		client: httpClient,
 	}
-	sgp := &StructureGroupProvider{
+
+	// провайдер структурных групп
+	sgp := &structureGroupProvider{
 		c: c,
 	}
-	ap := &ArticleProvider{
-		c: c,
-	}
+	// провайдер позиций
+	c.ap = newArticleProvider(c)
+	// апдейтер позиций
+	c.au = newArticleUpdater(c)
+	// провайдер проверок
 	dqp := &DataQualityProvider{
 		c: c,
 	}
-	c.ap = ap
 	c.sgp = sgp
 	c.dqp = dqp
 	return c, nil
@@ -60,19 +64,24 @@ type Client struct {
 	Config Config
 	client http.Client
 
-	sgp *StructureGroupProvider
-	ap  *ArticleProvider
+	sgp StructureGroupProvider
+	ap  ArticleProvider
+	au  ArticleUpdater
 	dqp *DataQualityProvider
 }
 
 // позволяет работать со структурными группами
-func (c *Client) StructureGroupProvider() *StructureGroupProvider {
+func (c *Client) StructureGroupProvider() StructureGroupProvider {
 	return c.sgp
 }
 
 // позволяет работать с позициями
-func (c *Client) ArticleProvider() *ArticleProvider {
+func (c *Client) ArticleProvider() ArticleProvider {
 	return c.ap
+}
+
+func (c *Client) ArticleUpdater() ArticleUpdater {
+	return c.au
 }
 
 // позволяет работать с правилами качества данных
@@ -99,7 +108,6 @@ func (c *Client) postJson(url string, data []byte) (*http.Response, error) {
 }
 
 func (c *Client) get(url string) (*PimReadResponse, error) {
-	url += "&cacheId=no-cache"
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return nil, err
@@ -170,7 +178,12 @@ func (c *Client) try(req *http.Request) (*http.Response, error) {
 		return nil, err
 	}
 	if res.StatusCode != 200 {
-		return nil, fmt.Errorf("status code is %v", res.StatusCode)
+		defer res.Body.Close()
+		body, err := ioutil.ReadAll(res.Body)
+		if err != nil {
+			return nil, err
+		}
+		return nil, fmt.Errorf("status code is %v, body: %v", res.StatusCode, string(body))
 	}
 	return res, nil
 }
@@ -188,6 +201,18 @@ func (c *Client) UpdateFromOrder(dto *PimUpdateOrder) error {
 		return fmt.Errorf("update complete with %v errors", res.Counters.Errors)
 	}
 	return nil
+}
+
+func (c *Client) DoSearch(s Search) (*PimReadResponse, error) {
+	if s == nil {
+		return nil, fmt.Errorf("Search is nil")
+	}
+	if len(s.Query()) == 0 {
+		return nil, fmt.Errorf("query is empty")
+	}
+	url := c.baseListUrl() + s.ReportPath() + "/bySearch?" + "query=" + url2.QueryEscape(s.Query()) + "&fields=" + s.Fields() +
+		"&pageSize=-1&cacheId=no-cache"
+	return c.get(url)
 }
 
 type PimReadResponse struct {

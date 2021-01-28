@@ -17,26 +17,11 @@ var (
 		"StructureGroupAttribute.MultiValue"}
 )
 
-type StructureGroup struct {
-	Identifier  string
-	ObjectID    string
-	StructureID int
-	Features    map[string]Feature
-}
-
-type Feature struct {
-	Name         string
-	DataType     string
-	PresetValues []string
-	Mandatory    bool
-	Multivalued  bool
-}
-
-type StructureGroupProvider struct {
+type structureGroupProvider struct {
 	c *Client
 }
 
-func (i *StructureGroupProvider) GetInfomodelByIdentifier(identifier string, structureID int) (*StructureGroup, error) {
+func (i *structureGroupProvider) GetInfomodelByIdentifier(identifier string, structureID int) (*Infomodel, error) {
 	url := i.c.baseListUrl() + InfomodelPath + "/byItems?" +
 		"items=" + "'" + identifier + "'@" + strconv.Itoa(structureID) +
 		"&fields=" + strings.Join(InfomodelFields, ",") +
@@ -89,7 +74,7 @@ func (i *StructureGroupProvider) GetInfomodelByIdentifier(identifier string, str
 			Multivalued:  multi == "true",
 		}
 	}
-	return &StructureGroup{
+	return &Infomodel{
 		Identifier:  identifier,
 		StructureID: structureID,
 		Features:    fs,
