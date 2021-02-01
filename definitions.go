@@ -6,14 +6,17 @@ type StructureGroupProvider interface {
 
 type SearchFabric interface {
 	NewSearch(reportPath string) Search
+	NewStructureGroupSearch(structureIdentifier string) Search
 }
 
 type Search interface {
 	ReportPath() string
 	Query() string
 	Fields() string
+	Params() map[string]string
 	WithPredicate(predicate SearchPredicate) Search
 	WithOutputField(field string) Search
+	WithAdditionalParam(name, value string) Search
 }
 
 type SearchPredicateFabric interface {

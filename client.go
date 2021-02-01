@@ -210,8 +210,12 @@ func (c *Client) DoSearch(s Search) (*PimReadResponse, error) {
 	if len(s.Query()) == 0 {
 		return nil, fmt.Errorf("query is empty")
 	}
+
 	url := c.baseListUrl() + s.ReportPath() + "/bySearch?" + "query=" + url2.QueryEscape(s.Query()) + "&fields=" + s.Fields() +
 		"&pageSize=-1&cacheId=no-cache"
+	for k, v := range s.Params() {
+		url += "&" + k + "=" + v
+	}
 	return c.get(url)
 }
 
