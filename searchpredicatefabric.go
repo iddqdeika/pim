@@ -31,7 +31,7 @@ func (s *searchPredicateFabric) NewEqualsIC(field string, value string) SearchPr
 func (s *searchPredicateFabric) NewContains(field string, value string) SearchPredicate {
 	return simplePredicate{
 		v1:       field,
-		operator: "equals",
+		operator: "contains",
 		v2:       value,
 	}
 }
@@ -40,7 +40,7 @@ func (s *searchPredicateFabric) NewContains(field string, value string) SearchPr
 func (s *searchPredicateFabric) NewContainsIC(field string, value string) SearchPredicate {
 	return simplePredicate{
 		v1:       field,
-		operator: "equals",
+		operator: "containsIC",
 		v2:       value,
 	}
 }
