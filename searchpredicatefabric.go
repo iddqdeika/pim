@@ -1,7 +1,5 @@
 package pim
 
-import "net/url"
-
 var searchPredicateFabricInstance SearchPredicateFabric = &searchPredicateFabric{}
 
 func GetSearchPredicateFabricInstance() SearchPredicateFabric {
@@ -16,7 +14,16 @@ func (s *searchPredicateFabric) NewEquals(field string, value string) SearchPred
 	return simplePredicate{
 		v1:       field,
 		operator: "equals",
-		v2:       url.QueryEscape(value),
+		v2:       value,
+	}
+}
+
+// учитывайте, что в значении числа надо указывать без кавычек, а строки и даты - в кавычках
+func (s *searchPredicateFabric) NewEqualsIC(field string, value string) SearchPredicate {
+	return simplePredicate{
+		v1:       field,
+		operator: "equalsIC",
+		v2:       value,
 	}
 }
 
@@ -25,7 +32,7 @@ func (s *searchPredicateFabric) NewContains(field string, value string) SearchPr
 	return simplePredicate{
 		v1:       field,
 		operator: "equals",
-		v2:       url.QueryEscape(value),
+		v2:       value,
 	}
 }
 
@@ -34,7 +41,7 @@ func (s *searchPredicateFabric) NewContainsIC(field string, value string) Search
 	return simplePredicate{
 		v1:       field,
 		operator: "equals",
-		v2:       url.QueryEscape(value),
+		v2:       value,
 	}
 }
 

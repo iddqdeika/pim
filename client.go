@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	url2 "net/url"
 	"time"
 )
 
@@ -210,7 +211,7 @@ func (c *Client) DoSearch(s Search) (*PimReadResponse, error) {
 		return nil, fmt.Errorf("query is empty")
 	}
 
-	url := c.baseListUrl() + s.ReportPath() + "/bySearch?" + "query=" + s.Query() + "&fields=" + s.Fields() +
+	url := c.baseListUrl() + s.ReportPath() + "/bySearch?" + "query=" + url2.QueryEscape(s.Query()) + "&fields=" + s.Fields() +
 		"&pageSize=-1&cacheId=no-cache"
 	for k, v := range s.Params() {
 		url += "&" + k + "=" + v
