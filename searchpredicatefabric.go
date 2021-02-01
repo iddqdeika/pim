@@ -1,5 +1,7 @@
 package pim
 
+import "net/url"
+
 var searchPredicateFabricInstance SearchPredicateFabric = &searchPredicateFabric{}
 
 func GetSearchPredicateFabricInstance() SearchPredicateFabric {
@@ -14,7 +16,7 @@ func (s *searchPredicateFabric) NewEquals(field string, value string) SearchPred
 	return simplePredicate{
 		v1:       field,
 		operator: "equals",
-		v2:       value,
+		v2:       url.QueryEscape(value),
 	}
 }
 
@@ -23,7 +25,7 @@ func (s *searchPredicateFabric) NewContains(field string, value string) SearchPr
 	return simplePredicate{
 		v1:       field,
 		operator: "equals",
-		v2:       value,
+		v2:       url.QueryEscape(value),
 	}
 }
 
@@ -32,7 +34,7 @@ func (s *searchPredicateFabric) NewContainsIC(field string, value string) Search
 	return simplePredicate{
 		v1:       field,
 		operator: "equals",
-		v2:       value,
+		v2:       url.QueryEscape(value),
 	}
 }
 
