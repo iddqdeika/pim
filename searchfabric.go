@@ -46,7 +46,7 @@ func (s *search) Query() string {
 }
 
 func (s *search) Fields() string {
-	return strings.Join(s.fields, ";")
+	return strings.Join(s.fields, ",")
 }
 
 func (s *search) WithPredicate(predicate SearchPredicate) Search {
