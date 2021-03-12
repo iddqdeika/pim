@@ -1,6 +1,9 @@
 package pim
 
-import "fmt"
+import (
+	"encoding/json"
+	"fmt"
+)
 
 func newArticleUpdater(c *Client) ArticleUpdater {
 	return &articleUpdater{c: c}
@@ -24,7 +27,8 @@ func (p *articleUpdater) DoUpdate(columns []string, articles ...ArticleUpdate) e
 		return err
 	}
 	if res.Counters.Errors != 0 {
-		return fmt.Errorf("update complete with %v errors", res.Counters.Errors)
+		data, _ := json.Marshal(res)
+		return fmt.Errorf("update complete with %v errors, response: %v", res.Counters.Errors, data)
 	}
 	return nil
 }
