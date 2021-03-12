@@ -14,6 +14,10 @@ const (
 	restUrlPath     = "/rest/V1.0/"
 	restUrlListPath = "/rest/V1.0/list/"
 	retryTimeout    = time.Second
+
+	//default mandatory (0) is Mandatory, be careful
+	UpdatePolicyMandatory UpdatePolicy = 0
+	UpdatePolicyNormal    UpdatePolicy = 1
 )
 
 var (
@@ -237,7 +241,12 @@ type PimReadObject struct {
 type PimUpdateOrder struct {
 	UrlPath    string         `json:"url_path"`
 	UpdateBody *PimUpdateBody `json:"update_body"`
+
+	// обозначает политику, по которой нужно исполнять обновление: нужно л
+	Policy UpdatePolicy `json:"policy"`
 }
+
+type UpdatePolicy int
 
 // проверяет консистентность самое себя
 func (o PimUpdateOrder) Validate() error {
@@ -254,6 +263,11 @@ func (o PimUpdateOrder) Validate() error {
 		return fmt.Errorf("no rows in update body")
 	}
 	return nil
+}
+
+func (o PimUpdateOrder) WithPolicy(p UpdatePolicy) PimUpdateOrder {
+	o.Policy = p
+	return o
 }
 
 type PimUpdateBody struct {
