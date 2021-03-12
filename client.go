@@ -290,9 +290,9 @@ type PimUpdateObject struct {
 }
 
 type PimUpdateResponse struct {
-	Counters PimUpdateCounters `json:"counters"`
-	Entries  []interface{}     `json:"entries"`
-	Objects  []interface{}     `json:"objects"`
+	Counters PimUpdateCounters        `json:"counters"`
+	Entries  []PimUpdateResponseEntry `json:"entries"`
+	Objects  []interface{}            `json:"objects"`
 }
 
 type PimUpdateCounters struct {
@@ -302,4 +302,22 @@ type PimUpdateCounters struct {
 	UpdatedObjects      int `json:"updated_objects"`
 	ObjectsWithErrors   int `json:"objects_with_errors"`
 	ObjectsWithWarnings int `json:"objects_with_warnings"`
+}
+
+type PimUpdateResponseEntry struct {
+	Category      string                       `json:"category"`
+	LogDate       string                       `json:"logDate"`
+	LogTime       string                       `json:"logTime"`
+	Message       string                       `json:"message"`
+	Object        PimUpdateResponseEntryObject `json:"object"`
+	ObjectType    string                       `json:"objectType"`
+	PropertyLabel string                       `json:"propertyLabel"`
+	Row           int                          `json:"row"`
+	Severity      string                       `json:"severity"`
+}
+
+type PimUpdateResponseEntryObject struct {
+	EntityID int    `json:"entityId"`
+	ID       string `json:"id"`
+	label    string `json:"label"`
 }
