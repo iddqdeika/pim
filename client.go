@@ -199,7 +199,7 @@ func (c *Client) UpdateFromOrder(dto *PimUpdateOrder) error {
 	}
 	if res.Counters.Errors != 0 {
 		data, _ := json.Marshal(res)
-		return fmt.Errorf("update complete with %v errors, response: %v", res.Counters.Errors, data)
+		return fmt.Errorf("update complete with %v errors, response: %v", res.Counters.Errors, string(data))
 	}
 	return nil
 }
