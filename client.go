@@ -281,7 +281,7 @@ type PimUpdateColumn struct {
 
 type PimUpdateRow struct {
 	Object        PimUpdateObject   `json:"object"`
-	Qualification map[string]string `json:"qualification"`
+	Qualification map[string]string `json:"qualification,omitempty"`
 	Values        []string          `json:"values"`
 }
 
