@@ -319,5 +319,5 @@ type PimUpdateResponseEntry struct {
 type PimUpdateResponseEntryObject struct {
 	EntityID int    `json:"entityId"`
 	ID       string `json:"id"`
-	label    string `json:"label"`
+	Label    string `json:"label"`
 }
