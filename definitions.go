@@ -21,8 +21,11 @@ type Search interface {
 
 type SearchPredicateFabric interface {
 	NewEquals(field string, value string) SearchPredicate
+	NewNotEquals(field string, value string) SearchPredicate
 	NewContains(field string, value string) SearchPredicate
+	NewNotContains(field string, value string) SearchPredicate
 	NewContainsIC(field string, value string) SearchPredicate
+	NewNotContainsIC(field string, value string) SearchPredicate
 	Or(p1, p2 SearchPredicate) SearchPredicate
 }
 
