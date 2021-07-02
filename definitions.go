@@ -27,6 +27,7 @@ type SearchPredicateFabric interface {
 	NewContainsIC(field string, value string) SearchPredicate
 	NewNotContainsIC(field string, value string) SearchPredicate
 	Or(p1, p2 SearchPredicate) SearchPredicate
+	And(p1, p2 SearchPredicate) SearchPredicate
 }
 
 type SearchPredicate interface {

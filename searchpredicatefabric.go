@@ -93,6 +93,14 @@ func (s *searchPredicateFabric) Or(p1, p2 SearchPredicate) SearchPredicate {
 	}
 }
 
+func (s *searchPredicateFabric) And(p1, p2 SearchPredicate) SearchPredicate {
+	return simplePredicate{
+		v1:       p1.Render(),
+		operator: "and",
+		v2:       p2.Render(),
+	}
+}
+
 type simplePredicate struct {
 	exclude  bool
 	v1       string
