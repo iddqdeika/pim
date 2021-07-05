@@ -4,11 +4,12 @@ type StructureGroupProvider interface {
 	GetInfomodelByIdentifier(identifier string, structureID int) (*Infomodel, error)
 }
 
-type SearchFabric interface {
+type SearchFactory interface {
 	NewSearch(reportPath string) Search
 	NewStructureGroupSearch(structureIdentifier string) Search
 }
 
+// Search defines search params and output fields
 type Search interface {
 	ReportPath() string
 	Query() string
@@ -54,18 +55,23 @@ type ArticleProvider interface {
 	GetAttributes(articleIdentifier string) ([]ArticleAttribute, error)
 }
 
-type ArticleUpdater interface {
-	DoUpdate(columns []string, articles ...ArticleUpdate) error
+type ArticleAttribute struct {
+	Name  string
+	Value string
 }
 
-type ArticleFabric interface {
+// отключено для последующего удаления
+//type ArticleUpdater interface {
+//	DoUpdate(columns []string, articles ...ArticleUpdate) error
+//}
+
+type ArticleUpdateFactory interface {
 	NewUpdateOrder(columns []string, articles ...ArticleUpdate) (*PimUpdateOrder, error)
 	NewUpdateOrderForAttrituteValue(update ArticleAttributeValueUpdate) (*PimUpdateOrder, error)
 	NewUpdateFromNo(articleNo string) ArticleUpdate
 	NewUpdateForAttributeValue(articleNo, language, identifier string) ArticleAttributeValueUpdate
 }
 
-type ArticleAttribute struct {
-	Name  string
-	Value string
+type StructureGroupUpdateFactory interface {
+	NewUpdateOrder(columns []string, groups ...StructureGroupUpdate) (*PimUpdateOrder, error)
 }

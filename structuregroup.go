@@ -6,10 +6,6 @@ import (
 	"strings"
 )
 
-const (
-	InfomodelPath = "StructureGroup/StructureGroupAttribute"
-)
-
 var (
 	//fields for requests
 	InfomodelFields = []string{"StructureGroupAttributeLang.Name(Russian)", "StructureGroupAttribute.Datatype",

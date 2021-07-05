@@ -2,16 +2,12 @@ package pim
 
 import "fmt"
 
-var articleFabricInstance ArticleFabric = &articleFabric{}
+var ArticleUpdates ArticleUpdateFactory = &articleUpdateFactory{}
 
-func GetArticleFabricInstance() ArticleFabric {
-	return articleFabricInstance
+type articleUpdateFactory struct {
 }
 
-type articleFabric struct {
-}
-
-func (p *articleFabric) NewUpdateOrder(columns []string, articles ...ArticleUpdate) (*PimUpdateOrder, error) {
+func (p *articleUpdateFactory) NewUpdateOrder(columns []string, articles ...ArticleUpdate) (*PimUpdateOrder, error) {
 	ub, err := newArticleUpdate(columns, articles)
 	if err != nil {
 		return nil, err
@@ -22,7 +18,7 @@ func (p *articleFabric) NewUpdateOrder(columns []string, articles ...ArticleUpda
 	}, nil
 }
 
-func (p *articleFabric) NewUpdateOrderForAttrituteValue(update ArticleAttributeValueUpdate) (*PimUpdateOrder, error) {
+func (p *articleUpdateFactory) NewUpdateOrderForAttrituteValue(update ArticleAttributeValueUpdate) (*PimUpdateOrder, error) {
 	b, err := newArticleAttributeValueUpdate(update)
 	if err != nil {
 		return nil, err
@@ -33,7 +29,7 @@ func (p *articleFabric) NewUpdateOrderForAttrituteValue(update ArticleAttributeV
 	}, nil
 }
 
-func (p *articleFabric) NewUpdateFromNo(articleNo string) ArticleUpdate {
+func (p *articleUpdateFactory) NewUpdateFromNo(articleNo string) ArticleUpdate {
 	return ArticleUpdate{
 		ArticleNo: articleNo,
 		Fields:    make(map[string]string),
@@ -42,7 +38,7 @@ func (p *articleFabric) NewUpdateFromNo(articleNo string) ArticleUpdate {
 
 // создать новый объект для обновления значений атрибутов позиции.
 // язык и идентификатор значения указывается для всех атрибутов сразу.
-func (p *articleFabric) NewUpdateForAttributeValue(articleNo, language, identifier string) ArticleAttributeValueUpdate {
+func (p *articleUpdateFactory) NewUpdateForAttributeValue(articleNo, language, identifier string) ArticleAttributeValueUpdate {
 	return ArticleAttributeValueUpdate{
 		ArticleNo:  articleNo,
 		Language:   language,

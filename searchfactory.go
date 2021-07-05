@@ -2,20 +2,16 @@ package pim
 
 import "strings"
 
-var searchFabricInstance SearchFabric = &searchFabric{}
+var SearchFabricInstance SearchFactory = &searchFactory{}
 
-func GetSearchFabricInstance() SearchFabric {
-	return searchFabricInstance
+type searchFactory struct {
 }
 
-type searchFabric struct {
-}
-
-func (s *searchFabric) NewStructureGroupSearch(structureIdentifier string) Search {
+func (s *searchFactory) NewStructureGroupSearch(structureIdentifier string) Search {
 	return s.NewSearch("StructureGroup").WithAdditionalParam("structure", structureIdentifier)
 }
 
-func (s *searchFabric) NewSearch(reportPath string) Search {
+func (s *searchFactory) NewSearch(reportPath string) Search {
 	return &search{
 		reportPath: reportPath,
 		params:     make(map[string]string),

@@ -5,11 +5,6 @@ import (
 	"strings"
 )
 
-const (
-	ArticlePath           = "Article"
-	ArticleAttributesPath = "Article/ArticleAttribute"
-)
-
 var (
 	ArticleAttributesFields = []string{"ArticleAttributeLang.Name", "ArticleAttributeValue.Value(Russian,DEFAULT)"}
 	bracketsReplacer        = strings.NewReplacer("[", "", "]", "")

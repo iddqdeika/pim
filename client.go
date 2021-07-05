@@ -10,16 +10,6 @@ import (
 	"time"
 )
 
-const (
-	restUrlPath     = "/rest/V1.0/"
-	restUrlListPath = "/rest/V1.0/list/"
-	retryTimeout    = time.Second
-
-	//default mandatory (0) is Mandatory, be careful
-	UpdatePolicyMandatory UpdatePolicy = 0
-	UpdatePolicyNormal    UpdatePolicy = 1
-)
-
 var (
 	//errors
 	TypeCastErr = fmt.Errorf("cant cast value to correct type")
@@ -52,7 +42,7 @@ func NewClient(config Config) (*Client, error) {
 	// провайдер позиций
 	c.ap = newArticleProvider(c)
 	// апдейтер позиций
-	c.au = newArticleUpdater(c)
+	//c.au = newArticleUpdater(c)
 	// провайдер проверок
 	dqp := &DataQualityProvider{
 		c: c,
@@ -70,7 +60,7 @@ type Client struct {
 
 	sgp StructureGroupProvider
 	ap  ArticleProvider
-	au  ArticleUpdater
+	//au  ArticleUpdater
 	dqp *DataQualityProvider
 }
 
@@ -84,9 +74,9 @@ func (c *Client) ArticleProvider() ArticleProvider {
 	return c.ap
 }
 
-func (c *Client) ArticleUpdater() ArticleUpdater {
-	return c.au
-}
+//func (c *Client) ArticleUpdater() ArticleUpdater {
+//	return c.au
+//}
 
 // позволяет работать с правилами качества данных
 func (c *Client) DataQualityProvider() *DataQualityProvider {
@@ -216,7 +206,13 @@ func (c *Client) DoSearch(s Search) (*PimReadResponse, error) {
 		return nil, fmt.Errorf("query is empty")
 	}
 
-	url := c.baseListUrl() + s.ReportPath() + "/bySearch?" + "query=" + url2.QueryEscape(s.Query()) + "&fields=" + s.Fields() +
+	url := c.baseListUrl() + s.ReportPath() + "/bySearch?"
+	delim := ""
+	for k, v := range s.Params() {
+		url += delim + k + "=" + v
+		delim = "&"
+	}
+	url += "query=" + url2.QueryEscape(s.Query()) + "&fields=" + s.Fields() +
 		"&pageSize=-1&cacheId=no-cache"
 	for k, v := range s.Params() {
 		url += "&" + k + "=" + v

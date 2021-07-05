@@ -5,9 +5,9 @@ import (
 	"fmt"
 )
 
-func newArticleUpdater(c *Client) ArticleUpdater {
-	return &articleUpdater{c: c}
-}
+//func newArticleUpdater(c *Client) ArticleUpdater {
+//	return &articleUpdater{c: c}
+//}
 
 type articleUpdater struct {
 	c *Client
