@@ -13,7 +13,7 @@ func (s *structureGroupUpdateFactory) NewUpdateOrder(columns []string, groups ..
 		return nil, err
 	}
 	return &PimUpdateOrder{
-		UrlPath:    ArticlePath,
+		UrlPath:    StructureGroupPath,
 		UpdateBody: ub,
 	}, nil
 }
