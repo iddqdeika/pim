@@ -212,11 +212,8 @@ func (c *Client) DoSearch(s Search) (*PimReadResponse, error) {
 		url += delim + k + "=" + v
 		delim = "&"
 	}
-	url += "query=" + url2.QueryEscape(s.Query()) + "&fields=" + s.Fields() +
+	url += delim + "query=" + url2.QueryEscape(s.Query()) + "&fields=" + s.Fields() +
 		"&pageSize=-1&cacheId=no-cache"
-	for k, v := range s.Params() {
-		url += "&" + k + "=" + v
-	}
 	return c.get(url)
 }
 
