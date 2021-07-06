@@ -24,6 +24,7 @@ type SearchPredicateFabric interface {
 	NewEquals(field string, value string) SearchPredicate
 	NewNotEquals(field string, value string) SearchPredicate
 	NewIsEmpty(field string) SearchPredicate
+	NewNotIsEmpty(field string) SearchPredicate
 	NewContains(field string, value string) SearchPredicate
 	NewNotContains(field string, value string) SearchPredicate
 	NewContainsIC(field string, value string) SearchPredicate

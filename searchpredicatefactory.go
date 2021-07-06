@@ -37,6 +37,15 @@ func (s *searchPredicateFabric) NewIsEmpty(field string) SearchPredicate {
 	}
 }
 
+func (s *searchPredicateFabric) NewNotIsEmpty(field string) SearchPredicate {
+	return simplePredicate{
+		exclude:  true,
+		v1:       field,
+		operator: "is",
+		v2:       "empty",
+	}
+}
+
 // учитывайте, что в значении числа надо указывать без кавычек, а строки и даты - в кавычках
 func (s *searchPredicateFabric) NewEqualsIC(field string, value string) SearchPredicate {
 	return simplePredicate{
