@@ -232,9 +232,6 @@ type PimReadObject struct {
 	EntityID int    `json:"entityId"`
 }
 
-type Qualification struct {
-}
-
 type PimUpdateOrder struct {
 	UrlPath    string         `json:"url_path"`
 	UpdateBody *PimUpdateBody `json:"update_body"`
