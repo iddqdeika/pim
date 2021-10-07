@@ -6,7 +6,7 @@ type searchPredicateFactory struct {
 }
 
 // учитывайте, что в значении числа надо указывать без кавычек, а строки и даты - в кавычках
-func (s *searchPredicateFactory) NewEquals(field string, value string) SearchPredicate {
+func (s *searchPredicateFactory) Equals(field string, value string) SearchPredicate {
 	return simplePredicate{
 		v1:       field,
 		operator: "equals",
@@ -15,7 +15,7 @@ func (s *searchPredicateFactory) NewEquals(field string, value string) SearchPre
 }
 
 // учитывайте, что в значении числа надо указывать без кавычек, а строки и даты - в кавычках
-func (s *searchPredicateFactory) NewNotEquals(field string, value string) SearchPredicate {
+func (s *searchPredicateFactory) NotEquals(field string, value string) SearchPredicate {
 	return simplePredicate{
 		exclude:  true,
 		v1:       field,
@@ -24,7 +24,7 @@ func (s *searchPredicateFactory) NewNotEquals(field string, value string) Search
 	}
 }
 
-func (s *searchPredicateFactory) NewIsEmpty(field string) SearchPredicate {
+func (s *searchPredicateFactory) IsEmpty(field string) SearchPredicate {
 	return simplePredicate{
 		exclude:  false,
 		v1:       field,
@@ -33,7 +33,7 @@ func (s *searchPredicateFactory) NewIsEmpty(field string) SearchPredicate {
 	}
 }
 
-func (s *searchPredicateFactory) NewNotIsEmpty(field string) SearchPredicate {
+func (s *searchPredicateFactory) NotIsEmpty(field string) SearchPredicate {
 	return simplePredicate{
 		exclude:  true,
 		v1:       field,
@@ -43,7 +43,7 @@ func (s *searchPredicateFactory) NewNotIsEmpty(field string) SearchPredicate {
 }
 
 // учитывайте, что в значении числа надо указывать без кавычек, а строки и даты - в кавычках
-func (s *searchPredicateFactory) NewEqualsIC(field string, value string) SearchPredicate {
+func (s *searchPredicateFactory) EqualsIC(field string, value string) SearchPredicate {
 	return simplePredicate{
 		v1:       field,
 		operator: "equalsIC",
@@ -52,7 +52,7 @@ func (s *searchPredicateFactory) NewEqualsIC(field string, value string) SearchP
 }
 
 // учитывайте, что в значении числа надо указывать без кавычек, а строки и даты - в кавычках
-func (s *searchPredicateFactory) NewNotEqualsIC(field string, value string) SearchPredicate {
+func (s *searchPredicateFactory) NotEqualsIC(field string, value string) SearchPredicate {
 	return simplePredicate{
 		exclude:  true,
 		v1:       field,
@@ -62,7 +62,7 @@ func (s *searchPredicateFactory) NewNotEqualsIC(field string, value string) Sear
 }
 
 // учитывайте, что в значении числа надо указывать без кавычек, а строки и даты - в кавычках
-func (s *searchPredicateFactory) NewContains(field string, value string) SearchPredicate {
+func (s *searchPredicateFactory) Contains(field string, value string) SearchPredicate {
 	return simplePredicate{
 		v1:       field,
 		operator: "contains",
@@ -71,7 +71,7 @@ func (s *searchPredicateFactory) NewContains(field string, value string) SearchP
 }
 
 // учитывайте, что в значении числа надо указывать без кавычек, а строки и даты - в кавычках
-func (s *searchPredicateFactory) NewNotContains(field string, value string) SearchPredicate {
+func (s *searchPredicateFactory) NotContains(field string, value string) SearchPredicate {
 	return simplePredicate{
 		exclude:  true,
 		v1:       field,
@@ -81,7 +81,7 @@ func (s *searchPredicateFactory) NewNotContains(field string, value string) Sear
 }
 
 // учитывайте, что в значении числа надо указывать без кавычек, а строки и даты - в кавычках
-func (s *searchPredicateFactory) NewContainsIC(field string, value string) SearchPredicate {
+func (s *searchPredicateFactory) ContainsIC(field string, value string) SearchPredicate {
 	return simplePredicate{
 		v1:       field,
 		operator: "containsIC",
@@ -90,7 +90,7 @@ func (s *searchPredicateFactory) NewContainsIC(field string, value string) Searc
 }
 
 // учитывайте, что в значении числа надо указывать без кавычек, а строки и даты - в кавычках
-func (s *searchPredicateFactory) NewNotContainsIC(field string, value string) SearchPredicate {
+func (s *searchPredicateFactory) NotContainsIC(field string, value string) SearchPredicate {
 	return simplePredicate{
 		exclude:  true,
 		v1:       field,

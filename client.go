@@ -222,13 +222,17 @@ type PimReadResponse struct {
 }
 
 type PimReadRow struct {
-	Object PimReadObject `json:"object"`
-	Values []interface{} `json:"values"`
+	Object        PimReadObject     `json:"object"`
+	Qualification map[string]string `json:"qualification"`
+	Values        []interface{}     `json:"values"`
 }
 
 type PimReadObject struct {
 	ID       string `json:"id"`
 	EntityID int    `json:"entityId"`
+}
+
+type Qualification struct {
 }
 
 type PimUpdateOrder struct {

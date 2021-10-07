@@ -21,14 +21,16 @@ type Search interface {
 }
 
 type SearchPredicateFactory interface {
-	NewEquals(field string, value string) SearchPredicate
-	NewNotEquals(field string, value string) SearchPredicate
-	NewIsEmpty(field string) SearchPredicate
-	NewNotIsEmpty(field string) SearchPredicate
-	NewContains(field string, value string) SearchPredicate
-	NewNotContains(field string, value string) SearchPredicate
-	NewContainsIC(field string, value string) SearchPredicate
-	NewNotContainsIC(field string, value string) SearchPredicate
+	Equals(field string, value string) SearchPredicate
+	EqualsIC(field string, value string) SearchPredicate
+	NotEquals(field string, value string) SearchPredicate
+	NotEqualsIC(field string, value string) SearchPredicate
+	IsEmpty(field string) SearchPredicate
+	NotIsEmpty(field string) SearchPredicate
+	Contains(field string, value string) SearchPredicate
+	NotContains(field string, value string) SearchPredicate
+	ContainsIC(field string, value string) SearchPredicate
+	NotContainsIC(field string, value string) SearchPredicate
 	Or(p1, p2 SearchPredicate) SearchPredicate
 	And(p1, p2 SearchPredicate) SearchPredicate
 }
