@@ -1,10 +1,6 @@
 package pim
 
-var searchPredicateFabricInstance SearchPredicateFactory = &searchPredicateFactory{}
-
-func GetSearchPredicateFabricInstance() SearchPredicateFactory {
-	return searchPredicateFabricInstance
-}
+var SearchPredicates SearchPredicateFactory = &searchPredicateFactory{}
 
 type searchPredicateFactory struct {
 }
