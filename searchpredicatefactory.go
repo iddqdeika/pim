@@ -1,16 +1,16 @@
 package pim
 
-var searchPredicateFabricInstance SearchPredicateFabric = &searchPredicateFabric{}
+var searchPredicateFabricInstance SearchPredicateFactory = &searchPredicateFactory{}
 
-func GetSearchPredicateFabricInstance() SearchPredicateFabric {
+func GetSearchPredicateFabricInstance() SearchPredicateFactory {
 	return searchPredicateFabricInstance
 }
 
-type searchPredicateFabric struct {
+type searchPredicateFactory struct {
 }
 
 // учитывайте, что в значении числа надо указывать без кавычек, а строки и даты - в кавычках
-func (s *searchPredicateFabric) NewEquals(field string, value string) SearchPredicate {
+func (s *searchPredicateFactory) NewEquals(field string, value string) SearchPredicate {
 	return simplePredicate{
 		v1:       field,
 		operator: "equals",
@@ -19,7 +19,7 @@ func (s *searchPredicateFabric) NewEquals(field string, value string) SearchPred
 }
 
 // учитывайте, что в значении числа надо указывать без кавычек, а строки и даты - в кавычках
-func (s *searchPredicateFabric) NewNotEquals(field string, value string) SearchPredicate {
+func (s *searchPredicateFactory) NewNotEquals(field string, value string) SearchPredicate {
 	return simplePredicate{
 		exclude:  true,
 		v1:       field,
@@ -28,7 +28,7 @@ func (s *searchPredicateFabric) NewNotEquals(field string, value string) SearchP
 	}
 }
 
-func (s *searchPredicateFabric) NewIsEmpty(field string) SearchPredicate {
+func (s *searchPredicateFactory) NewIsEmpty(field string) SearchPredicate {
 	return simplePredicate{
 		exclude:  false,
 		v1:       field,
@@ -37,7 +37,7 @@ func (s *searchPredicateFabric) NewIsEmpty(field string) SearchPredicate {
 	}
 }
 
-func (s *searchPredicateFabric) NewNotIsEmpty(field string) SearchPredicate {
+func (s *searchPredicateFactory) NewNotIsEmpty(field string) SearchPredicate {
 	return simplePredicate{
 		exclude:  true,
 		v1:       field,
@@ -47,7 +47,7 @@ func (s *searchPredicateFabric) NewNotIsEmpty(field string) SearchPredicate {
 }
 
 // учитывайте, что в значении числа надо указывать без кавычек, а строки и даты - в кавычках
-func (s *searchPredicateFabric) NewEqualsIC(field string, value string) SearchPredicate {
+func (s *searchPredicateFactory) NewEqualsIC(field string, value string) SearchPredicate {
 	return simplePredicate{
 		v1:       field,
 		operator: "equalsIC",
@@ -56,7 +56,7 @@ func (s *searchPredicateFabric) NewEqualsIC(field string, value string) SearchPr
 }
 
 // учитывайте, что в значении числа надо указывать без кавычек, а строки и даты - в кавычках
-func (s *searchPredicateFabric) NewNotEqualsIC(field string, value string) SearchPredicate {
+func (s *searchPredicateFactory) NewNotEqualsIC(field string, value string) SearchPredicate {
 	return simplePredicate{
 		exclude:  true,
 		v1:       field,
@@ -66,7 +66,7 @@ func (s *searchPredicateFabric) NewNotEqualsIC(field string, value string) Searc
 }
 
 // учитывайте, что в значении числа надо указывать без кавычек, а строки и даты - в кавычках
-func (s *searchPredicateFabric) NewContains(field string, value string) SearchPredicate {
+func (s *searchPredicateFactory) NewContains(field string, value string) SearchPredicate {
 	return simplePredicate{
 		v1:       field,
 		operator: "contains",
@@ -75,7 +75,7 @@ func (s *searchPredicateFabric) NewContains(field string, value string) SearchPr
 }
 
 // учитывайте, что в значении числа надо указывать без кавычек, а строки и даты - в кавычках
-func (s *searchPredicateFabric) NewNotContains(field string, value string) SearchPredicate {
+func (s *searchPredicateFactory) NewNotContains(field string, value string) SearchPredicate {
 	return simplePredicate{
 		exclude:  true,
 		v1:       field,
@@ -85,7 +85,7 @@ func (s *searchPredicateFabric) NewNotContains(field string, value string) Searc
 }
 
 // учитывайте, что в значении числа надо указывать без кавычек, а строки и даты - в кавычках
-func (s *searchPredicateFabric) NewContainsIC(field string, value string) SearchPredicate {
+func (s *searchPredicateFactory) NewContainsIC(field string, value string) SearchPredicate {
 	return simplePredicate{
 		v1:       field,
 		operator: "containsIC",
@@ -94,7 +94,7 @@ func (s *searchPredicateFabric) NewContainsIC(field string, value string) Search
 }
 
 // учитывайте, что в значении числа надо указывать без кавычек, а строки и даты - в кавычках
-func (s *searchPredicateFabric) NewNotContainsIC(field string, value string) SearchPredicate {
+func (s *searchPredicateFactory) NewNotContainsIC(field string, value string) SearchPredicate {
 	return simplePredicate{
 		exclude:  true,
 		v1:       field,
@@ -103,7 +103,7 @@ func (s *searchPredicateFabric) NewNotContainsIC(field string, value string) Sea
 	}
 }
 
-func (s *searchPredicateFabric) Or(p1, p2 SearchPredicate) SearchPredicate {
+func (s *searchPredicateFactory) Or(p1, p2 SearchPredicate) SearchPredicate {
 	return simplePredicate{
 		v1:       p1.Render(),
 		operator: "or",
@@ -111,7 +111,7 @@ func (s *searchPredicateFabric) Or(p1, p2 SearchPredicate) SearchPredicate {
 	}
 }
 
-func (s *searchPredicateFabric) And(p1, p2 SearchPredicate) SearchPredicate {
+func (s *searchPredicateFactory) And(p1, p2 SearchPredicate) SearchPredicate {
 	return simplePredicate{
 		v1:       p1.Render(),
 		operator: "and",

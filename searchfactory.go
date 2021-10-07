@@ -2,7 +2,7 @@ package pim
 
 import "strings"
 
-var SearchFabricInstance SearchFactory = &searchFactory{}
+var Searches SearchFactory = &searchFactory{}
 
 type searchFactory struct {
 }

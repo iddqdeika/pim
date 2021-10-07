@@ -20,7 +20,7 @@ type Search interface {
 	WithAdditionalParam(name, value string) Search
 }
 
-type SearchPredicateFabric interface {
+type SearchPredicateFactory interface {
 	NewEquals(field string, value string) SearchPredicate
 	NewNotEquals(field string, value string) SearchPredicate
 	NewIsEmpty(field string) SearchPredicate
