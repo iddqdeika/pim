@@ -208,12 +208,17 @@ func (c *Client) DoSearch(s Search) (*PimReadResponse, error) {
 
 	url := c.baseListUrl() + s.ReportPath() + "/bySearch?"
 	delim := ""
+
+	s.WithAdditionalParam("cacheId", "no-cache")
+	_, exist := s.Params()["pagesize"]
+	if !exist {
+		s.WithAdditionalParam("pageSize", "-1")
+	}
 	for k, v := range s.Params() {
 		url += delim + k + "=" + v
 		delim = "&"
 	}
-	url += delim + "query=" + url2.QueryEscape(s.Query()) + "&fields=" + s.Fields() +
-		"&pageSize=-1&cacheId=no-cache"
+	url += delim + "query=" + url2.QueryEscape(s.Query()) + "&fields=" + s.Fields()
 	return c.get(url)
 }
 
