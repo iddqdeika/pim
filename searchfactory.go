@@ -36,7 +36,7 @@ func (s *search) ReportPath() string {
 func (s *search) Query() string {
 	preds := make([]string, len(s.predicates))
 	for i, predicate := range s.predicates {
-		preds[i] = predicate.Render()
+		preds[i] = strings.ReplaceAll(predicate.Render(), "\\", "\\\\")
 	}
 	return strings.Join(preds, " and ")
 }
