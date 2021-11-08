@@ -72,3 +72,17 @@ func (p *articleProvider) GetAttributes(articleIdentifier string) ([]ArticleAttr
 	}
 	return result, nil
 }
+
+func (p *articleProvider) CheckArticleExistence(articleIdentifier string) (exists bool, err error) {
+	if articleIdentifier == "" {
+		return false, nil
+	}
+	s := Searches.
+		NewSearch(ArticlePath).
+		WithPredicate(SearchPredicates.Equals("Article.SupplierAID", articleIdentifier))
+	res, err := p.c.DoSearch(s)
+	if err != nil {
+		return false, fmt.Errorf("cant check article %v existence: %v", articleIdentifier, err)
+	}
+	return len(res.Rows) == 1, nil
+}

@@ -57,6 +57,7 @@ type Feature struct {
 type ArticleProvider interface {
 	GetStructureMaps(articleIdentifier string, structureIdentifier string) ([]string, error)
 	GetAttributes(articleIdentifier string) ([]ArticleAttribute, error)
+	CheckArticleExistence(articleIdentifier string) (exists bool, err error)
 }
 
 type ArticleAttribute struct {
