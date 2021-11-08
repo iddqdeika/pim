@@ -79,7 +79,7 @@ func (p *articleProvider) CheckArticleExistence(articleIdentifier string) (exist
 	}
 	s := Searches.
 		NewSearch(ArticlePath).
-		WithPredicate(SearchPredicates.Equals("Article.SupplierAID", articleIdentifier))
+		WithPredicate(SearchPredicates.Equals("Article.SupplierAID", "\""+articleIdentifier+"\""))
 	res, err := p.c.DoSearch(s)
 	if err != nil {
 		return false, fmt.Errorf("cant check article %v existence: %v", articleIdentifier, err)
