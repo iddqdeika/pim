@@ -58,11 +58,18 @@ type ArticleProvider interface {
 	GetStructureMaps(articleIdentifier string, structureIdentifier string) ([]string, error)
 	GetAttributes(articleIdentifier string) ([]ArticleAttribute, error)
 	CheckArticleExistence(articleIdentifier string) (exists bool, err error)
+	SetArticleMediaAssets(articleIdentifier string, assets []*Asset) error
+	DeleteArticleMediaAssets(articleIdentifier string, assets []*Asset) error
 }
 
 type ArticleAttribute struct {
 	Name  string
 	Value string
+}
+
+type AssetProvider interface {
+	UploadAssetData(*Asset) (*Asset, error)
+	RegisterAsset(*Asset) (*Asset, error)
 }
 
 // отключено для последующего удаления
@@ -75,6 +82,12 @@ type ArticleUpdateFactory interface {
 	NewUpdateOrderForAttrituteValue(update ArticleAttributeValueUpdate) (*PimUpdateOrder, error)
 	NewUpdateFromNo(articleNo string) ArticleUpdate
 	NewUpdateForAttributeValue(articleNo, language, identifier string) ArticleAttributeValueUpdate
+	NewDeleteMediaAssetOrder(article ArticleMediaAssetDelete) (*PimUpdateOrder, error)
+	NewDeleteFromNo(articleNo string, mediaTypes []string) ArticleMediaAssetDelete
+}
+
+type AssetFactory interface {
+	NewAssetFromData(name string, assetType string, data []byte) *Asset
 }
 
 type StructureGroupUpdateFactory interface {

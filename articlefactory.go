@@ -1,6 +1,9 @@
 package pim
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
 var ArticleUpdates ArticleUpdateFactory = &articleUpdateFactory{}
 
@@ -29,10 +32,25 @@ func (p *articleUpdateFactory) NewUpdateOrderForAttrituteValue(update ArticleAtt
 	}, nil
 }
 
+func (p *articleUpdateFactory) NewDeleteMediaAssetOrder(article ArticleMediaAssetDelete) (*PimUpdateOrder, error) {
+	path := fmt.Sprintf("/byIdentifiers?identifiers=%v&qualificationFilter=mediaAssetTypes(%v)", article.ArticleNo, article.MediaTypes)
+
+	return &PimUpdateOrder{
+		UrlPath: ArticleMediaAssetMapPath + path,
+	}, nil
+}
+
 func (p *articleUpdateFactory) NewUpdateFromNo(articleNo string) ArticleUpdate {
 	return ArticleUpdate{
 		ArticleNo: articleNo,
 		Fields:    make(map[string]string),
+	}
+}
+
+func (p *articleUpdateFactory) NewDeleteFromNo(articleNo string, mediaTypes []string) ArticleMediaAssetDelete {
+	return ArticleMediaAssetDelete{
+		ArticleNo:  articleNo,
+		MediaTypes: strings.Join(mediaTypes, ","),
 	}
 }
 
@@ -110,6 +128,11 @@ type ArticleUpdate struct {
 func (a ArticleUpdate) With(field string, value string) ArticleUpdate {
 	a.Fields[field] = value
 	return a
+}
+
+type ArticleMediaAssetDelete struct {
+	ArticleNo  string
+	MediaTypes string
 }
 
 type ArticleAttributeValueUpdate struct {

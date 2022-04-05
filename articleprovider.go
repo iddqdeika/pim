@@ -86,3 +86,48 @@ func (p *articleProvider) CheckArticleExistence(articleIdentifier string) (exist
 	}
 	return len(res.Rows) == 1, nil
 }
+
+func (p *articleProvider) SetArticleMediaAssets(articleIdentifier string, assets []*Asset) error {
+	if articleIdentifier == "" {
+		return fmt.Errorf("article id was not provided")
+	}
+
+	update := ArticleUpdates.NewUpdateFromNo(articleIdentifier)
+	fields := []string{}
+	for _, asset := range assets {
+		if asset.Type == "" {
+			return fmt.Errorf("unknow asset type `%s` for asset with id `%s`", asset.Type, asset.ID)
+		}
+
+		field := fmt.Sprintf("ArticleMediaAssetDocument.Identifier(%s,original,Russian)", asset.Type)
+		fields = append(fields, field)
+		update.With(field, asset.ID)
+	}
+
+	order, err := Updates.Article.NewUpdateOrder(fields, update)
+	if err != nil {
+		return err
+	}
+
+	return p.c.UpdateFromOrder(order)
+}
+
+func (p *articleProvider) DeleteArticleMediaAssets(articleIdentifier string, assets []*Asset) error {
+	if articleIdentifier == "" {
+		return fmt.Errorf("article id was not provided")
+	}
+
+	mediaTypes := []string{}
+	for _, asset := range assets {
+		mediaTypes = append(mediaTypes, asset.Type)
+	}
+
+	delete := ArticleUpdates.NewDeleteFromNo(articleIdentifier, mediaTypes)
+
+	order, err := Updates.Article.NewDeleteMediaAssetOrder(delete)
+	if err != nil {
+		return err
+	}
+
+	return p.c.DeleteFromOrder(order)
+}

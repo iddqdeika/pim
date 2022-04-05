@@ -47,6 +47,9 @@ func NewClient(config Config) (*Client, error) {
 	dqp := &DataQualityProvider{
 		c: c,
 	}
+
+	c.as = newAssetProvider(c)
+
 	c.sgp = sgp
 	c.dqp = dqp
 	return c, nil
@@ -62,6 +65,7 @@ type Client struct {
 	ap  ArticleProvider
 	//au  ArticleUpdater
 	dqp *DataQualityProvider
+	as  AssetProvider
 }
 
 // позволяет работать со структурными группами
@@ -83,6 +87,10 @@ func (c *Client) DataQualityProvider() *DataQualityProvider {
 	return c.dqp
 }
 
+func (c *Client) AssetProvider() AssetProvider {
+	return c.as
+}
+
 func (c *Client) baseUrl() string {
 	return "http://" + c.Config.Host + restUrlPath
 }
@@ -97,6 +105,26 @@ func (c *Client) postJson(url string, data []byte) (*http.Response, error) {
 		return nil, err
 	}
 	req.Header.Set("Content-Type", "application/json")
+	req.SetBasicAuth(c.Config.Login, c.Config.Password)
+	return c.client.Do(req)
+}
+
+func (c *Client) postOctet(url string, data []byte) (*http.Response, error) {
+	req, err := http.NewRequest("POST", url, bytes.NewBuffer(data))
+	if err != nil {
+		return nil, err
+	}
+	req.Header.Set("Content-Type", "application/octet-stream")
+	req.SetBasicAuth(c.Config.Login, c.Config.Password)
+	return c.client.Do(req)
+}
+
+func (c *Client) postText(url string, data string) (*http.Response, error) {
+	req, err := http.NewRequest("POST", url, bytes.NewBuffer([]byte(data)))
+	if err != nil {
+		return nil, err
+	}
+	req.Header.Set("Content-Type", "text/plain")
 	req.SetBasicAuth(c.Config.Login, c.Config.Password)
 	return c.client.Do(req)
 }
@@ -153,6 +181,20 @@ func (c *Client) update(url string, ub *PimUpdateBody) (*PimUpdateResponse, erro
 	return r, nil
 }
 
+func (c *Client) delete(url string) error {
+	req, err := http.NewRequest("DELETE", url, nil)
+	if err != nil {
+		return err
+	}
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	req.SetBasicAuth(c.Config.Login, c.Config.Password)
+	if _, err := c.doWithRetries(req, 1); err != nil {
+		return err
+	}
+	
+	return nil
+}
+
 func (c *Client) doWithRetries(req *http.Request, tries int) (*http.Response, error) {
 	var res *http.Response
 	var err error
@@ -195,6 +237,15 @@ func (c *Client) UpdateFromOrder(dto *PimUpdateOrder) error {
 		data, _ := json.Marshal(res)
 		return fmt.Errorf("update complete with %v errors, response: %v", res.Counters.Errors, string(data))
 	}
+	return nil
+}
+
+func (c *Client) DeleteFromOrder(dto *PimUpdateOrder) error {
+	url := c.baseListUrl() + dto.UrlPath
+	if err := c.delete(url); err != nil {
+		return err
+	}
+
 	return nil
 }
 
