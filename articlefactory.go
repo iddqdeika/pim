@@ -1,6 +1,9 @@
 package pim
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
 var ArticleUpdates ArticleUpdateFactory = &articleUpdateFactory{}
 
@@ -33,6 +36,15 @@ func (p *articleUpdateFactory) NewUpdateFromNo(articleNo string) ArticleUpdate {
 	return ArticleUpdate{
 		ArticleNo: articleNo,
 		Fields:    make(map[string]string),
+	}
+}
+
+func (p *articleUpdateFactory) NewDeleteMediaAssetOrder(articleNo string, mediaTypes []string) *PimDeleteOrder {
+	mediaTypesString := strings.Join(mediaTypes, ",")
+	path := fmt.Sprintf("/byIdentifiers?identifiers=%v&qualificationFilter=mediaAssetTypes(%v)", articleNo, mediaTypesString)
+
+	return &PimDeleteOrder{
+		UrlPath: ArticleMediaAssetMapPath + path,
 	}
 }
 

@@ -11,8 +11,9 @@ const (
 	UpdatePolicyMandatory UpdatePolicy = 0
 	UpdatePolicyNormal    UpdatePolicy = 1
 
-	ArticlePath           = "Article"
-	ArticleAttributesPath = "Article/ArticleAttribute"
-	InfomodelPath         = "StructureGroup/StructureGroupAttribute"
-	StructureGroupPath    = "StructureGroup"
+	ArticlePath              = "Article"
+	ArticleAttributesPath    = "Article/ArticleAttribute"
+	ArticleMediaAssetMapPath = "Article/ArticleMediaAssetMap"
+	InfomodelPath            = "StructureGroup/StructureGroupAttribute"
+	StructureGroupPath       = "StructureGroup"
 )

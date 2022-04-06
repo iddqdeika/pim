@@ -65,6 +65,11 @@ type ArticleAttribute struct {
 	Value string
 }
 
+type AssetProvider interface {
+	UploadFile(*File) (*UploadedFile, error)
+	RegisterAsset(*UploadedFile) (*Asset, error)
+}
+
 // отключено для последующего удаления
 //type ArticleUpdater interface {
 //	DoUpdate(columns []string, articles ...ArticleUpdate) error
@@ -75,6 +80,11 @@ type ArticleUpdateFactory interface {
 	NewUpdateOrderForAttrituteValue(update ArticleAttributeValueUpdate) (*PimUpdateOrder, error)
 	NewUpdateFromNo(articleNo string) ArticleUpdate
 	NewUpdateForAttributeValue(articleNo, language, identifier string) ArticleAttributeValueUpdate
+	NewDeleteMediaAssetOrder(articleNo string, mediaTypes []string) *PimDeleteOrder
+}
+
+type AssetFactory interface {
+	NewFile(name string, filetype string, data []byte) *File
 }
 
 type StructureGroupUpdateFactory interface {
