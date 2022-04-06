@@ -19,9 +19,9 @@ func newAssetProvider(c *Client) AssetProvider {
 }
 
 // UploadAssetData загружает данные ассета, возвращает указатель на Asset с заполненным TempID
-func (p *assetProvider) UploadAssetData(asset *Asset) (*Asset, error) {
-	url := p.c.baseUrl() + "manage/file?originalFilename=" + asset.Name
-	resp, err := p.c.postOctet(url, asset.Data)
+func (p *assetProvider) UploadFile(file *File) (*UploadedFile, error) {
+	url := p.c.baseUrl() + "manage/file?originalFilename=" + file.Name
+	resp, err := p.c.postOctet(url, file.Data)
 	if err != nil {
 		return nil, err
 	}
@@ -42,14 +42,12 @@ func (p *assetProvider) UploadAssetData(asset *Asset) (*Asset, error) {
 		return nil, fmt.Errorf("response parsing error: %w", err)
 	}
 
-	asset.TempID = r.ID
-
-	return asset, nil
+	return &UploadedFile{Name: file.Name, Type: file.Type, ID: r.ID}, nil
 }
 
-func (p *assetProvider) RegisterAsset(asset *Asset) (*Asset, error) {
-	url := p.c.baseUrl() + "media/" + asset.TempID
-	resp, err := p.c.postText(url, asset.TempID)
+func (p *assetProvider) RegisterAsset(file *UploadedFile) (*Asset, error) {
+	url := p.c.baseUrl() + "media/" + file.ID
+	resp, err := p.c.postText(url, file.ID)
 	if err != nil {
 		return nil, err
 	}
@@ -65,7 +63,5 @@ func (p *assetProvider) RegisterAsset(asset *Asset) (*Asset, error) {
 		return nil, fmt.Errorf("response read error: %w", err)
 	}
 
-	asset.ID = string(body)
-
-	return asset, nil
+	return &Asset{Name: file.Name, Type: file.Type, ID: string(body)}, nil
 }

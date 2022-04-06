@@ -68,8 +68,8 @@ type ArticleAttribute struct {
 }
 
 type AssetProvider interface {
-	UploadAssetData(*Asset) (*Asset, error)
-	RegisterAsset(*Asset) (*Asset, error)
+	UploadFile(*File) (*UploadedFile, error)
+	RegisterAsset(*UploadedFile) (*Asset, error)
 }
 
 // отключено для последующего удаления
@@ -87,7 +87,7 @@ type ArticleUpdateFactory interface {
 }
 
 type AssetFactory interface {
-	NewAssetFromData(name string, assetType string, data []byte) *Asset
+	NewFile(name string, filetype string, data []byte) *File
 }
 
 type StructureGroupUpdateFactory interface {
