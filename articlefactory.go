@@ -32,14 +32,6 @@ func (p *articleUpdateFactory) NewUpdateOrderForAttrituteValue(update ArticleAtt
 	}, nil
 }
 
-func (p *articleUpdateFactory) NewDeleteMediaAssetOrder(article ArticleMediaAssetDelete) (*PimDeleteOrder, error) {
-	path := fmt.Sprintf("/byIdentifiers?identifiers=%v&qualificationFilter=mediaAssetTypes(%v)", article.ArticleNo, article.MediaTypes)
-
-	return &PimDeleteOrder{
-		UrlPath: ArticleMediaAssetMapPath + path,
-	}, nil
-}
-
 func (p *articleUpdateFactory) NewUpdateFromNo(articleNo string) ArticleUpdate {
 	return ArticleUpdate{
 		ArticleNo: articleNo,
@@ -47,10 +39,12 @@ func (p *articleUpdateFactory) NewUpdateFromNo(articleNo string) ArticleUpdate {
 	}
 }
 
-func (p *articleUpdateFactory) NewDeleteFromNo(articleNo string, mediaTypes []string) ArticleMediaAssetDelete {
-	return ArticleMediaAssetDelete{
-		ArticleNo:  articleNo,
-		MediaTypes: strings.Join(mediaTypes, ","),
+func (p *articleUpdateFactory) NewDeleteMediaAssetOrder(articleNo string, mediaTypes []string) *PimDeleteOrder {
+	mediaTypesString := strings.Join(mediaTypes, ",")
+	path := fmt.Sprintf("/byIdentifiers?identifiers=%v&qualificationFilter=mediaAssetTypes(%v)", articleNo, mediaTypesString)
+
+	return &PimDeleteOrder{
+		UrlPath: ArticleMediaAssetMapPath + path,
 	}
 }
 
@@ -128,11 +122,6 @@ type ArticleUpdate struct {
 func (a ArticleUpdate) With(field string, value string) ArticleUpdate {
 	a.Fields[field] = value
 	return a
-}
-
-type ArticleMediaAssetDelete struct {
-	ArticleNo  string
-	MediaTypes string
 }
 
 type ArticleAttributeValueUpdate struct {

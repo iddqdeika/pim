@@ -122,12 +122,7 @@ func (p *articleProvider) DeleteArticleMediaAssets(articleIdentifier string, ass
 		mediaTypes = append(mediaTypes, asset.Type)
 	}
 
-	delete := ArticleUpdates.NewDeleteFromNo(articleIdentifier, mediaTypes)
-
-	order, err := Updates.Article.NewDeleteMediaAssetOrder(delete)
-	if err != nil {
-		return err
-	}
+	order := ArticleUpdates.NewDeleteMediaAssetOrder(articleIdentifier, mediaTypes)
 
 	return p.c.DeleteFromOrder(order)
 }

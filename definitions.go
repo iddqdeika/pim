@@ -82,8 +82,7 @@ type ArticleUpdateFactory interface {
 	NewUpdateOrderForAttrituteValue(update ArticleAttributeValueUpdate) (*PimUpdateOrder, error)
 	NewUpdateFromNo(articleNo string) ArticleUpdate
 	NewUpdateForAttributeValue(articleNo, language, identifier string) ArticleAttributeValueUpdate
-	NewDeleteMediaAssetOrder(article ArticleMediaAssetDelete) (*PimDeleteOrder, error)
-	NewDeleteFromNo(articleNo string, mediaTypes []string) ArticleMediaAssetDelete
+	NewDeleteMediaAssetOrder(articleNo string, mediaTypes []string) *PimDeleteOrder
 }
 
 type AssetFactory interface {
