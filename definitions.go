@@ -58,8 +58,6 @@ type ArticleProvider interface {
 	GetStructureMaps(articleIdentifier string, structureIdentifier string) ([]string, error)
 	GetAttributes(articleIdentifier string) ([]ArticleAttribute, error)
 	CheckArticleExistence(articleIdentifier string) (exists bool, err error)
-	SetArticleMediaAssets(articleIdentifier string, assets []*Asset) error
-	DeleteArticleMediaAssets(articleIdentifier string, assets []*Asset) error
 }
 
 type ArticleAttribute struct {
