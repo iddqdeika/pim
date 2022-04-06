@@ -191,7 +191,7 @@ func (c *Client) delete(url string) error {
 	if _, err := c.doWithRetries(req, 1); err != nil {
 		return err
 	}
-	
+
 	return nil
 }
 
@@ -240,7 +240,7 @@ func (c *Client) UpdateFromOrder(dto *PimUpdateOrder) error {
 	return nil
 }
 
-func (c *Client) DeleteFromOrder(dto *PimUpdateOrder) error {
+func (c *Client) DeleteFromOrder(dto *PimDeleteOrder) error {
 	url := c.baseListUrl() + dto.UrlPath
 	if err := c.delete(url); err != nil {
 		return err
@@ -294,6 +294,10 @@ type PimUpdateOrder struct {
 
 	// обозначает политику, по которой нужно исполнять обновление: нужно л
 	Policy UpdatePolicy `json:"policy"`
+}
+
+type PimDeleteOrder struct {
+	UrlPath string `json:"url_path"`
 }
 
 type UpdatePolicy int

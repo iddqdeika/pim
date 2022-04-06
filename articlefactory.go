@@ -32,10 +32,10 @@ func (p *articleUpdateFactory) NewUpdateOrderForAttrituteValue(update ArticleAtt
 	}, nil
 }
 
-func (p *articleUpdateFactory) NewDeleteMediaAssetOrder(article ArticleMediaAssetDelete) (*PimUpdateOrder, error) {
+func (p *articleUpdateFactory) NewDeleteMediaAssetOrder(article ArticleMediaAssetDelete) (*PimDeleteOrder, error) {
 	path := fmt.Sprintf("/byIdentifiers?identifiers=%v&qualificationFilter=mediaAssetTypes(%v)", article.ArticleNo, article.MediaTypes)
 
-	return &PimUpdateOrder{
+	return &PimDeleteOrder{
 		UrlPath: ArticleMediaAssetMapPath + path,
 	}, nil
 }
