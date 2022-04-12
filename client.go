@@ -225,11 +225,7 @@ func (c *Client) try(req *http.Request) (*http.Response, error) {
 }
 
 func (c *Client) UpdateFromOrder(dto *PimUpdateOrder) error {
-	if err := dto.Validate(); err != nil {
-		return fmt.Errorf("invalid pim update order given: %v", err)
-	}
-	url := c.baseListUrl() + dto.UrlPath
-	res, err := c.update(url, dto.UpdateBody)
+	res, err := c.UpdateFromOrderWithResponse(dto)
 	if err != nil {
 		return err
 	}
@@ -238,6 +234,14 @@ func (c *Client) UpdateFromOrder(dto *PimUpdateOrder) error {
 		return fmt.Errorf("update complete with %v errors, response: %v", res.Counters.Errors, string(data))
 	}
 	return nil
+}
+
+func (c *Client) UpdateFromOrderWithResponse(dto *PimUpdateOrder) (*PimUpdateResponse, error) {
+	if err := dto.Validate(); err != nil {
+		return nil, fmt.Errorf("invalid pim update order given: %v", err)
+	}
+	url := c.baseListUrl() + dto.UrlPath
+	return c.update(url, dto.UpdateBody)
 }
 
 func (c *Client) DeleteFromOrder(dto *PimDeleteOrder) error {
