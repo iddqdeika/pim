@@ -41,7 +41,7 @@ func (p *articleUpdateFactory) NewUpdateFromNo(articleNo string) ArticleUpdate {
 
 func (p *articleUpdateFactory) NewDeleteMediaAssetOrder(articleNo string, mediaTypes []string) *PimDeleteOrder {
 	mediaTypesString := strings.Join(mediaTypes, ",")
-	path := fmt.Sprintf("/byIdentifiers?identifiers=%v&qualificationFilter=mediaAssetTypes(%v)", articleNo, mediaTypesString)
+	path := fmt.Sprintf("/byIdentifiers?identifiers=%v&qualificationFilter=mediaAssetType(%v)", articleNo, mediaTypesString)
 
 	return &PimDeleteOrder{
 		UrlPath: ArticleMediaAssetMapPath + path,
